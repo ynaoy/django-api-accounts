@@ -1,9 +1,7 @@
 from django.test import TestCase
 from unittest import skip
 from ..models import User
-from ..utils import get_jwt, get_jwt_and_set_cookie, verify_jwt
-from rest_framework import status
-from rest_framework.response import Response
+from ..utils import get_jwt
 from django.http import HttpRequest
 from rest_framework.request import Request
 from ..permissions import OnlyYouPerm, OnlyLogoutPerm
