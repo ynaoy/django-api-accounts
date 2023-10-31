@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    command: 
+      - --default-authentication-plugin=caching_sha2_password
+      - --sql-mode=NO_ENGINE_SUBSTITUTION
+    volumes:
+      - ./django/src/db/mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 1s
+  web:
+    build: ./django
+    command: python3 ./accounts/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django/src:/django
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
